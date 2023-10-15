@@ -28,9 +28,10 @@ resource "aws_lambda_function" "users_create" {
   
   runtime = "nodejs18.x"
   handler = "create.handler"
+  timeout = 10
 
   role = aws_iam_role.lambda_iam.arn
-  layers = [aws_lambda_layer_version.lambda_layer.arn]
+  # layers = [aws_lambda_layer_version.lambda_layer.arn]
 }
 
 resource "aws_cloudwatch_log_group" "cloud_watch" {
