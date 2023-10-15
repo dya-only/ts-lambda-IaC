@@ -11,14 +11,14 @@ resource "aws_s3_bucket" "lambda_bucket" {
 data "archive_file" "lambda_layer" {
   type = "zip"
 
-  source_dir = "../node_modules"
-  output_path = "../build/node_modules.zip"
+  source_dir = "../uuid"
+  output_path = "../build/uuid.zip"
 }
 
 resource "aws_s3_object" "lambda_layer" {
   bucket = aws_s3_bucket.lambda_bucket.id
 
-  key = "node_modules.zip"
+  key = "nodejs.zip"
   source = data.archive_file.lambda_layer.output_path
   etag = filemd5(data.archive_file.lambda_layer.output_path)
 }
