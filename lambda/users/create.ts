@@ -1,7 +1,7 @@
 import { DynamoDBClient } from '@aws-sdk/client-dynamodb'
 import { DynamoDBDocumentClient, PutCommand } from '@aws-sdk/lib-dynamodb'
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda'
-// const {"v4": uuidv4} = require('uuid');
+import { v4 } from 'uuid'
 
 const dynamo = new DynamoDBClient({})
 const client = DynamoDBDocumentClient.from(dynamo)
@@ -12,15 +12,22 @@ export const handler = async (events: APIGatewayProxyEvent): Promise<APIGatewayP
   const command = new PutCommand({
     TableName: "DynamoUsers",
     Item: {
-      id: "thisisid",
+      id: v4(),
       name: body.name,
       password: body.password
     },
   })
-  await client.send(command)
+  const response = await client.send(command)
+    .then(resp => {
+      console.log('Success', resp)
+      return resp
+    }).catch(err => {
+      console.log('Error', err)
+      return err
+    })
 
   return {
     statusCode: 200,
-    body: JSON.stringify({ id: 'asdf', name: body.name, password: body.password })
+    body: JSON.stringify(response)
   }
 }
