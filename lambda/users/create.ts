@@ -17,17 +17,22 @@ export const handler = async (events: APIGatewayProxyEvent): Promise<APIGatewayP
       password: body.password
     },
   })
-  const response = await client.send(command)
-    .then(resp => {
-      console.log('Success', resp)
-      return resp
-    }).catch(err => {
-      console.log('Error', err)
-      return err
-    })
 
-  return {
-    statusCode: 200,
-    body: JSON.stringify(response)
+  await client.send(command)
+
+  // return {
+  //   "isBase64Encoded": false,
+  //   "statusCode": 200,
+  //   "headers": { "Content-Type": "application/json" },
+  //   "multiValueHeaders": {},
+  //   "body": "asdf"
+  // }
+  try {
+    await client.send(command)
+    console.log('name', body.name)
+    return { statusCode: 200, body: 'Successfully created item!' }
+  } catch (err) {
+    console.log('err', err)
+    return { statusCode: 500, body: JSON.stringify(err) }
   }
 }

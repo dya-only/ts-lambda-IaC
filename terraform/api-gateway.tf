@@ -43,7 +43,7 @@ resource "aws_apigatewayv2_route" "hello" {
   target = "integrations/${aws_apigatewayv2_integration.hello.id}"
 }
 
-resource "aws_lambda_permission" "api_gw" {
+resource "aws_lambda_permission" "api_gw_hello" {
   statement_id  = "AllowExecutionFromAPIGateway"
   action        = "lambda:InvokeFunction"
   function_name = aws_lambda_function.hello.function_name
@@ -68,10 +68,60 @@ resource "aws_apigatewayv2_route" "users_create" {
   target = "integrations/${aws_apigatewayv2_integration.users_create.id}"
 }
 
-resource "aws_lambda_permission" "awi_gw" {
+resource "aws_lambda_permission" "api_gw_users_create" {
   statement_id = "AllowExecutionFromAPIGateway"
   action = "lambda:InvokeFunction"
   function_name = aws_lambda_function.users_create.function_name
+  principal = "apigateway.amazonaws.com"
+
+  source_arn = "${aws_apigatewayv2_api.api_gateway.execution_arn}/*/*"
+}
+
+# [GET] /users
+# resource "aws_apigatewayv2_integration" "users_find_all" {
+#   api_id = aws_apigatewayv2_api.api_gateway.id
+
+#   integration_uri = aws_lambda_function.users_find_all.invoke_arn
+#   integration_type = "AWS_PROXY"
+#   integration_method = "POST"
+# }
+
+# resource "aws_apigatewayv2_route" "users_find_all" {
+#   api_id = aws_apigatewayv2_api.api_gateway.id
+
+#   route_key = "GET /users"
+#   target = "integrations/${aws_apigatewayv2_integration.users_find_all.id}"
+# }
+
+# resource "aws_lambda_permission" "awi_gw_users_find_all" {
+#   statement_id = "AllowExecutionFromAPIGateway"
+#   action = "lambda:InvokeFunction"
+#   function_name = aws_lambda_function.users_find_all.function_name
+#   principal = "apigateway.amazonaws.com"
+
+#   source_arn = "${aws_apigatewayv2_api.api_gateway.execution_arn}/*/*"
+# }
+
+# [GET] /users/:id
+resource "aws_apigatewayv2_integration" "users_find_by_id" {
+  api_id = aws_apigatewayv2_api.api_gateway.id
+
+  integration_uri = aws_lambda_function.users_find_by_id.invoke_arn
+  integration_type = "AWS_PROXY"
+  integration_method = "POST"
+}
+
+resource "aws_apigatewayv2_route" "users_find_by_id" {
+  api_id = aws_apigatewayv2_api.api_gateway.id
+
+  route_key = "GET /users/{id}"
+  target = "integrations/${aws_apigatewayv2_integration.users_find_by_id.id}"
+}
+
+resource "aws_lambda_permission" "awi_gw_users_find_by_id" {
+  statement_id = "AllowExecutionFromAPIGateway"
+  action = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.users_find_by_id.function_name
   principal = "apigateway.amazonaws.com"
 
   source_arn = "${aws_apigatewayv2_api.api_gateway.execution_arn}/*/*"

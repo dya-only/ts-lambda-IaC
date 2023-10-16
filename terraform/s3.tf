@@ -54,3 +54,35 @@ resource "aws_s3_object" "lambda_users_create" {
   source = data.archive_file.lambda_users_create.output_path
   etag = filemd5(data.archive_file.lambda_users_create.output_path)
 }
+
+# users findAll
+data "archive_file" "lambda_users_find_all" {
+  type = "zip"
+
+  source_file = "../dist/users/findAll.js"
+  output_path = "../build/users/findAll.zip"
+}
+
+resource "aws_s3_object" "lambda_users_find_all" {
+  bucket = aws_s3_bucket.lambda_bucket.id
+
+  key = "findAll.zip"
+  source = data.archive_file.lambda_users_find_all.output_path
+  etag = filemd5(data.archive_file.lambda_users_find_all.output_path)
+}
+
+# users find by id
+data "archive_file" "lambda_users_find_by_id" {
+  type = "zip"
+
+  source_file = "../dist/users/findById.js"
+  output_path = "../build/users/findById.zip"
+}
+
+resource "aws_s3_object" "lambda_users_find_by_id" {
+  bucket = aws_s3_bucket.lambda_bucket.id
+
+  key = "findById.zip"
+  source = data.archive_file.lambda_users_find_by_id.output_path
+  etag = filemd5(data.archive_file.lambda_users_find_by_id.output_path)
+}
