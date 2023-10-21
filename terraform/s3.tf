@@ -7,21 +7,21 @@ resource "aws_s3_bucket" "lambda_bucket" {
   bucket = random_pet.lambda_bucket_name.id
 }
 
-# lambda layer (node_modules)
-data "archive_file" "lambda_layer" {
-  type = "zip"
+# lambda layer (node_modules/uuid)
+# data "archive_file" "lambda_layer" {
+#   type = "zip"
 
-  source_dir = "../uuid"
-  output_path = "../build/uuid.zip"
-}
+#   source_dir = "../uuid"
+#   output_path = "../build/uuid.zip"
+# }
 
-resource "aws_s3_object" "lambda_layer" {
-  bucket = aws_s3_bucket.lambda_bucket.id
+# resource "aws_s3_object" "lambda_layer" {
+#   bucket = aws_s3_bucket.lambda_bucket.id
 
-  key = "nodejs.zip"
-  source = data.archive_file.lambda_layer.output_path
-  etag = filemd5(data.archive_file.lambda_layer.output_path)
-}
+#   key = "nodejs.zip"
+#   source = data.archive_file.lambda_layer.output_path
+#   etag = filemd5(data.archive_file.lambda_layer.output_path)
+# }
 
 # hello
 data "archive_file" "lambda_hello" {

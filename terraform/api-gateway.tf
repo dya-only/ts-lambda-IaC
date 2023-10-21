@@ -102,7 +102,7 @@ resource "aws_lambda_permission" "api_gw_users_create" {
 #   source_arn = "${aws_apigatewayv2_api.api_gateway.execution_arn}/*/*"
 # }
 
-# [GET] /users/:id
+# [GET] /users/:username
 resource "aws_apigatewayv2_integration" "users_find_by_id" {
   api_id = aws_apigatewayv2_api.api_gateway.id
 
@@ -114,7 +114,7 @@ resource "aws_apigatewayv2_integration" "users_find_by_id" {
 resource "aws_apigatewayv2_route" "users_find_by_id" {
   api_id = aws_apigatewayv2_api.api_gateway.id
 
-  route_key = "GET /users/{id}"
+  route_key = "GET /users/{username}"
   target = "integrations/${aws_apigatewayv2_integration.users_find_by_id.id}"
 }
 

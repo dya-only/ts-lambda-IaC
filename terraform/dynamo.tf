@@ -2,12 +2,12 @@
 resource "aws_dynamodb_table" "dynamo" {
   name = "DynamoUsers"
   billing_mode = "PROVISIONED"
-  hash_key = "id"
-  read_capacity  = 20
-  write_capacity = 20
+  hash_key = "username"
+  read_capacity  = 10
+  write_capacity = 10
 
   attribute {
-    name = "id"
+    name = "username"
     type = "S"
   }
 }
