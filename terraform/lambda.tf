@@ -49,13 +49,13 @@ resource "aws_lambda_function" "users_find_all" {
 
 # users findById
 resource "aws_lambda_function" "users_find_by_id" {
-  function_name = "users-find-by-id"
+  function_name = "users-find-one"
 
   s3_bucket = aws_s3_bucket.lambda_bucket.id
   s3_key = aws_s3_object.lambda_users_find_by_id.key
   
   runtime = "nodejs18.x"
-  handler = "findById.handler"
+  handler = "findOne.handler"
   timeout = 10
 
   role = aws_iam_role.lambda_iam.arn

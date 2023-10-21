@@ -78,29 +78,29 @@ resource "aws_lambda_permission" "api_gw_users_create" {
 }
 
 # [GET] /users
-# resource "aws_apigatewayv2_integration" "users_find_all" {
-#   api_id = aws_apigatewayv2_api.api_gateway.id
+resource "aws_apigatewayv2_integration" "users_find_all" {
+  api_id = aws_apigatewayv2_api.api_gateway.id
 
-#   integration_uri = aws_lambda_function.users_find_all.invoke_arn
-#   integration_type = "AWS_PROXY"
-#   integration_method = "POST"
-# }
+  integration_uri = aws_lambda_function.users_find_all.invoke_arn
+  integration_type = "AWS_PROXY"
+  integration_method = "POST"
+}
 
-# resource "aws_apigatewayv2_route" "users_find_all" {
-#   api_id = aws_apigatewayv2_api.api_gateway.id
+resource "aws_apigatewayv2_route" "users_find_all" {
+  api_id = aws_apigatewayv2_api.api_gateway.id
 
-#   route_key = "GET /users"
-#   target = "integrations/${aws_apigatewayv2_integration.users_find_all.id}"
-# }
+  route_key = "GET /users"
+  target = "integrations/${aws_apigatewayv2_integration.users_find_all.id}"
+}
 
-# resource "aws_lambda_permission" "awi_gw_users_find_all" {
-#   statement_id = "AllowExecutionFromAPIGateway"
-#   action = "lambda:InvokeFunction"
-#   function_name = aws_lambda_function.users_find_all.function_name
-#   principal = "apigateway.amazonaws.com"
+resource "aws_lambda_permission" "awi_gw_users_find_all" {
+  statement_id = "AllowExecutionFromAPIGateway"
+  action = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.users_find_all.function_name
+  principal = "apigateway.amazonaws.com"
 
-#   source_arn = "${aws_apigatewayv2_api.api_gateway.execution_arn}/*/*"
-# }
+  source_arn = "${aws_apigatewayv2_api.api_gateway.execution_arn}/*/*"
+}
 
 # [GET] /users/:username
 resource "aws_apigatewayv2_integration" "users_find_by_id" {

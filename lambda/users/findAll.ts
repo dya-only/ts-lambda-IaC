@@ -1,26 +1,27 @@
 import { DynamoDBClient, ScanCommand } from '@aws-sdk/client-dynamodb'
-import { DynamoDBDocumentClient, GetCommand } from '@aws-sdk/lib-dynamodb'
+import { DynamoDBDocumentClient } from '@aws-sdk/lib-dynamodb'
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda'
 
 const dynamo = new DynamoDBClient({})
 const client = DynamoDBDocumentClient.from(dynamo)
 
-export const handler = async (_: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
-  const command = new ScanCommand({
-    TableName: "DynamoUsers"
-  })
-
-  const response = await client.send(command)
-    .then(resp => {
-      console.log('Success', resp)
-      return resp
-    }).catch(err => {
-      console.log('Error', err)
-      return err
+export const handler = async (events: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
+  const res = await client.send(
+    new ScanCommand({
+      TableName: 'DynamoUsers'
     })
+  )
 
-  return {
-    statusCode: 200,
-    body: response
+  const response = {
+    'statusCode': 200,
+    'headers': {
+      'Content-Type': '*/*'
+    },
+    'body': JSON.stringify({
+      success: true,
+      body: res.Items
+    }),
+    'isBase64Encoded': false
   }
+  return response
 }

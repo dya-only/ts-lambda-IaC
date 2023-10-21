@@ -71,12 +71,12 @@ resource "aws_s3_object" "lambda_users_find_all" {
   etag = filemd5(data.archive_file.lambda_users_find_all.output_path)
 }
 
-# users find by id
+# users find one
 data "archive_file" "lambda_users_find_by_id" {
   type = "zip"
 
-  source_file = "../dist/users/findById.js"
-  output_path = "../build/users/findById.zip"
+  source_file = "../dist/users/findOne.js"
+  output_path = "../build/users/findOne.zip"
 }
 
 resource "aws_s3_object" "lambda_users_find_by_id" {
