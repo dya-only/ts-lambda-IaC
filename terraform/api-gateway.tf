@@ -127,7 +127,31 @@ resource "aws_lambda_permission" "awi_gw_users_find_by_id" {
   source_arn = "${aws_apigatewayv2_api.api_gateway.execution_arn}/*/*"
 }
 
-# ---------------------
+# [POST] /auth/by-pass
+resource "aws_apigatewayv2_integration" "auth_by_pass" {
+  api_id = aws_apigatewayv2_api.api_gateway.id
+
+  integration_uri = aws_lambda_function.auth_by_pass.invoke_arn
+  integration_type = "AWS_PROXY"
+  integration_method = "POST"
+}
+
+resource "aws_apigatewayv2_route" "auth_by_pass" {
+  api_id = aws_apigatewayv2_api.api_gateway.id
+
+  route_key = "POST /auth/by-pass"
+  target = "integrations/${aws_apigatewayv2_integration.auth_by_pass.id}"
+}
+
+resource "aws_lambda_permission" "awi_gw_auth_by_pass" {
+  statement_id = "AllowExecutionFromAPIGateway"
+  action = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.auth_by_pass.function_name
+  principal = "apigateway.amazonaws.com"
+
+  source_arn = "${aws_apigatewayv2_api.api_gateway.execution_arn}/*/*"
+}
+
 
 resource "aws_cloudwatch_log_group" "api_gw" {
   name = "/aws/api_gw/${aws_apigatewayv2_api.api_gateway.name}"

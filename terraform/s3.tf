@@ -14,14 +14,20 @@ resource "aws_s3_bucket" "lambda_bucket" {
 #   source_dir = "../uuid"
 #   output_path = "../build/uuid.zip"
 # }
+data "archive_file" "lambda_layer" {
+  type = "zip"
 
-# resource "aws_s3_object" "lambda_layer" {
-#   bucket = aws_s3_bucket.lambda_bucket.id
+  source_dir = "../node_modules"
+  output_path = "../build/node_modules"
+}
 
-#   key = "nodejs.zip"
-#   source = data.archive_file.lambda_layer.output_path
-#   etag = filemd5(data.archive_file.lambda_layer.output_path)
-# }
+resource "aws_s3_object" "lambda_layer" {
+  bucket = aws_s3_bucket.lambda_bucket.id
+
+  key = "node_modules.zip"
+  source = data.archive_file.lambda_layer.output_path
+  etag = filemd5(data.archive_file.lambda_layer.output_path)
+}
 
 # hello
 data "archive_file" "lambda_hello" {
@@ -85,4 +91,20 @@ resource "aws_s3_object" "lambda_users_find_by_id" {
   key = "findById.zip"
   source = data.archive_file.lambda_users_find_by_id.output_path
   etag = filemd5(data.archive_file.lambda_users_find_by_id.output_path)
+}
+
+# auth by-pass
+data "archive_file" "lambda_auth_by_pass" {
+  type = "zip"
+
+  source_file = "../dist/auth/by-pass.js"
+  output_path = "../build/auth/by-pass.zip"
+}
+
+resource "aws_s3_object" "lambda_auth_by_pass" {
+  bucket = aws_s3_bucket.lambda_bucket.id
+
+  key = "by-pass.zip"
+  source = data.archive_file.lambda_auth_by_pass.output_path
+  etag = filemd5(data.archive_file.lambda_auth_by_pass.output_path)
 }

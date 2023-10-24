@@ -5,6 +5,12 @@
 
 #   compatible_runtimes = ["nodejs18.x"]
 # }
+resource "aws_lambda_layer_version" "lambda_layer" {
+  filename = data.archive_file.lambda_layer.output_path
+  layer_name = "node_modules"
+
+  compatible_runtimes = ["nodejs18.x"]
+}
 
 # hello
 resource "aws_lambda_function" "hello" {
@@ -60,6 +66,21 @@ resource "aws_lambda_function" "users_find_by_id" {
 
   role = aws_iam_role.lambda_iam.arn
 }
+
+# auth by-pass
+resource "aws_lambda_function" "auth_by_pass" {
+  function_name = "auth-by-pass"
+
+  s3_bucket = aws_s3_bucket.lambda_bucket.id
+  s3_key = aws_s3_object.lambda_auth_by_pass.key
+  
+  runtime = "nodejs18.x"
+  handler = "by-pass.handler"
+  timeout = 10
+
+  role = aws_iam_role.lambda_iam.arn
+}
+
 
 resource "aws_cloudwatch_log_group" "cloud_watch" {
   name = "/aws/lambda/${aws_lambda_function.users_create.function_name}"
