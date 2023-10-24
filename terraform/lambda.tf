@@ -73,6 +73,7 @@ resource "aws_lambda_function" "auth_by_pass" {
 
   s3_bucket = aws_s3_bucket.lambda_bucket.id
   s3_key = aws_s3_object.lambda_auth_by_pass.key
+  layers = [aws_lambda_layer_version.lambda_layer.arn]
   
   runtime = "nodejs18.x"
   handler = "by-pass.handler"

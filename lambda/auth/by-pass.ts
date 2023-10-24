@@ -29,7 +29,7 @@ export const handler = async (events: APIGatewayProxyEvent): Promise<APIGatewayP
         token: jwt.sign({ username: user.Item.username }, 'jwtSecretKey', { expiresIn: '3d' })
       }),
       'isBase64Encoded': false
-    }
+   }
     return response
   }
 
