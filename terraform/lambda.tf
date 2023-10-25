@@ -7,7 +7,7 @@
 # }
 resource "aws_lambda_layer_version" "lambda_layer" {
   filename = data.archive_file.lambda_layer.output_path
-  layer_name = "node_modules"
+  layer_name = "lambda_layer"
 
   compatible_runtimes = ["nodejs18.x"]
 }

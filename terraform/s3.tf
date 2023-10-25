@@ -17,14 +17,14 @@ resource "aws_s3_bucket" "lambda_bucket" {
 data "archive_file" "lambda_layer" {
   type = "zip"
 
-  source_dir = "../jsonwebtoken"
-  output_path = "../build/jsonwebtoken.zip"
+  source_dir = "../lambda_layer"
+  output_path = "../build/lambda_layer.zip"
 }
 
 resource "aws_s3_object" "lambda_layer" {
   bucket = aws_s3_bucket.lambda_bucket.id
 
-  key = "jsonwebtoken.zip"
+  key = "lambda_layer.zip"
   source = data.archive_file.lambda_layer.output_path
   etag = filemd5(data.archive_file.lambda_layer.output_path)
 }
