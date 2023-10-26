@@ -7,13 +7,7 @@ resource "aws_s3_bucket" "lambda_bucket" {
   bucket = random_pet.lambda_bucket_name.id
 }
 
-# lambda layer (node_modules/uuid)
-# data "archive_file" "lambda_layer" {
-#   type = "zip"
-
-#   source_dir = "../uuid"
-#   output_path = "../build/uuid.zip"
-# }
+# lambda layer (node_modules)
 data "archive_file" "lambda_layer" {
   type = "zip"
 
@@ -107,4 +101,20 @@ resource "aws_s3_object" "lambda_auth_by_pass" {
   key = "by-pass.zip"
   source = data.archive_file.lambda_auth_by_pass.output_path
   etag = filemd5(data.archive_file.lambda_auth_by_pass.output_path)
+}
+
+# auth verify
+data "archive_file" "lambda_auth_verify" {
+  type = "zip"
+
+  source_file = "../dist/auth/verify.js"
+  output_path = "../build/auth/verify.zip"
+}
+
+resource "aws_s3_object" "lambda_auth_verify" {
+  bucket = aws_s3_bucket.lambda_bucket.id
+
+  key = "verify.zip"
+  source = data.archive_file.lambda_auth_verify.output_path
+  etag = filemd5(data.archive_file.lambda_auth_verify.output_path)
 }

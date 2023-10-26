@@ -12,7 +12,7 @@ export const handler = async (events: APIGatewayProxyEvent): Promise<APIGatewayP
     new GetCommand({
       TableName: 'DynamoUsers',
       Key: {
-        username: body.name
+        username: body.username
       }
     })
   )
@@ -37,7 +37,7 @@ export const handler = async (events: APIGatewayProxyEvent): Promise<APIGatewayP
     new PutCommand({
       TableName: 'DynamoUsers',
       Item: {
-        username: body.name,
+        username: body.username,
         password: body.password
       },
     })
@@ -51,7 +51,7 @@ export const handler = async (events: APIGatewayProxyEvent): Promise<APIGatewayP
     "body": JSON.stringify({
       success: true,
       body: {
-        username: body.name,
+        username: body.username,
         password: body.password,
       }
     }),

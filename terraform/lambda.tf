@@ -82,7 +82,22 @@ resource "aws_lambda_function" "auth_by_pass" {
   role = aws_iam_role.lambda_iam.arn
 }
 
+# auth verify
+resource "aws_lambda_function" "auth_verify" {
+  function_name = "auth-verify"
 
+  s3_bucket = aws_s3_bucket.lambda_bucket.id
+  s3_key = aws_s3_object.lambda_auth_verify.key
+  layers = [aws_lambda_layer_version.lambda_layer.arn]
+  
+  runtime = "nodejs18.x"
+  handler = "verify.handler"
+  timeout = 10
+
+  role = aws_iam_role.lambda_iam.arn
+}
+
+# cloudwatch log
 resource "aws_cloudwatch_log_group" "cloud_watch" {
   name = "/aws/lambda/${aws_lambda_function.users_create.function_name}"
   retention_in_days = 30

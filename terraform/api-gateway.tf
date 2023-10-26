@@ -152,6 +152,31 @@ resource "aws_lambda_permission" "awi_gw_auth_by_pass" {
   source_arn = "${aws_apigatewayv2_api.api_gateway.execution_arn}/*/*"
 }
 
+# [POST] /auth/verify
+resource "aws_apigatewayv2_integration" "auth_verify" {
+  api_id = aws_apigatewayv2_api.api_gateway.id
+
+  integration_uri = aws_lambda_function.auth_verify.invoke_arn
+  integration_type = "AWS_PROXY"
+  integration_method = "POST"
+}
+
+resource "aws_apigatewayv2_route" "auth_verify" {
+  api_id = aws_apigatewayv2_api.api_gateway.id
+
+  route_key = "POST /auth/verify"
+  target = "integrations/${aws_apigatewayv2_integration.auth_verify.id}"
+}
+
+resource "aws_lambda_permission" "awi_gw_auth_verify" {
+  statement_id = "AllowExecutionFromAPIGateway"
+  action = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.auth_verify.function_name
+  principal = "apigateway.amazonaws.com"
+
+  source_arn = "${aws_apigatewayv2_api.api_gateway.execution_arn}/*/*"
+}
+
 
 resource "aws_cloudwatch_log_group" "api_gw" {
   name = "/aws/api_gw/${aws_apigatewayv2_api.api_gateway.name}"
