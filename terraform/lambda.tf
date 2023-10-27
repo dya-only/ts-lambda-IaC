@@ -5,9 +5,9 @@
 
 #   compatible_runtimes = ["nodejs18.x"]
 # }
-resource "aws_lambda_layer_version" "lambda_layer" {
-  filename = data.archive_file.lambda_layer.output_path
-  layer_name = "lambda_layer"
+resource "aws_lambda_layer_version" "jsonwebtoken" {
+  filename = data.archive_file.jsonwebtoken.output_path
+  layer_name = "jsonwebtoken"
 
   compatible_runtimes = ["nodejs18.x"]
 }
@@ -73,8 +73,8 @@ resource "aws_lambda_function" "auth_by_pass" {
 
   s3_bucket = aws_s3_bucket.lambda_bucket.id
   s3_key = aws_s3_object.lambda_auth_by_pass.key
-  layers = [aws_lambda_layer_version.lambda_layer.arn]
-  
+  layers = [aws_lambda_layer_version.jsonwebtoken.arn]
+ 
   runtime = "nodejs18.x"
   handler = "by-pass.handler"
   timeout = 10
@@ -88,7 +88,7 @@ resource "aws_lambda_function" "auth_verify" {
 
   s3_bucket = aws_s3_bucket.lambda_bucket.id
   s3_key = aws_s3_object.lambda_auth_verify.key
-  layers = [aws_lambda_layer_version.lambda_layer.arn]
+  layers = [aws_lambda_layer_version.jsonwebtoken.arn]
   
   runtime = "nodejs18.x"
   handler = "verify.handler"

@@ -7,20 +7,20 @@ resource "aws_s3_bucket" "lambda_bucket" {
   bucket = random_pet.lambda_bucket_name.id
 }
 
-# lambda layer (node_modules)
-data "archive_file" "lambda_layer" {
+# lambda layers
+data "archive_file" "jsonwebtoken" {
   type = "zip"
 
-  source_dir = "../lambda_layer"
-  output_path = "../build/lambda_layer.zip"
+  source_dir = "../layers/jsonwebtoken"
+  output_path = "../build/layers/jsonwebtoken.zip"
 }
 
-resource "aws_s3_object" "lambda_layer" {
+resource "aws_s3_object" "jsonwebtoken" {
   bucket = aws_s3_bucket.lambda_bucket.id
 
-  key = "lambda_layer.zip"
-  source = data.archive_file.lambda_layer.output_path
-  etag = filemd5(data.archive_file.lambda_layer.output_path)
+  key = "jsonwebtoken.zip"
+  source = data.archive_file.jsonwebtoken.output_path
+  etag = filemd5(data.archive_file.jsonwebtoken.output_path)
 }
 
 # hello
